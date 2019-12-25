@@ -8,17 +8,60 @@
 
 import UIKit
 
-class WeatherViewController: UIViewController {
+class WeatherViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var conditionImageView: UIImageView!
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
+    @IBOutlet weak var searchTextField: UITextField!
+     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        // Text field should report back to the view controller (self)
+        searchTextField.delegate = self
     }
 
-
+    @IBAction func searchButtonPressed(_ sender: UIButton) {
+        print(searchTextField.text!)
+        
+        // Make the keyboard go away
+        searchTextField.endEditing(true)
+    }
+    
+    // This function triggers when user taps on the return button
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print(searchTextField.text!)
+        
+        // Make the keyboard go away
+        searchTextField.endEditing(true)
+        
+        // Return true means the view controller allows the text field to return
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        // this code triggers when any text field finishes editing
+        
+        
+        searchTextField.text = ""
+    }
+    
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        // This is a good place for validation
+        // Traps user in the text field if they haven't typed anything, for example
+        
+        // textField is whatever field triggers this function
+        if textField.text != "" {
+            
+            // The user is allowed to end editing
+            return true
+        }
+        else {
+            textField.placeholder = "Please type a location"
+            return false
+        }
+    }
 }
 
