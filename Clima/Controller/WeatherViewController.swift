@@ -19,7 +19,7 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Text field should report back to the view controller (self)
+        // searchTextField should set the WeatherViewController instance as its delegate
         searchTextField.delegate = self
     }
 
