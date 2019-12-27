@@ -9,7 +9,10 @@
 import Foundation
 
 protocol WeatherManagerDelegate {
-    func didUpdateWeather(weather: WeatherModel)
+    func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel)
+    
+    // Error handler that lets the delegate handles any error
+    func didFailWithError(error: Error)
 }
 
 struct WeatherManager {
@@ -30,13 +33,15 @@ struct WeatherManager {
             
             // Step 3 Give the session a task
             // CompletionHandler is the equivalent of a call back
+            // Use a closure to handle the call back
             let task = session.dataTask(with: url) { (data, response, error) in
                 if error != nil {
+                    self.delegate?.didFailWithError(error: error!)
                     return
                 }
                 if let safeData = data {
                     if let weather: WeatherModel = self.parseJSON(data: safeData) {
-                        self.delegate?.didUpdateWeather(weather: weather)
+                        self.delegate?.didUpdateWeather(self, weather: weather)
                     }
                 }
             }
@@ -58,6 +63,7 @@ struct WeatherManager {
             
         } catch {
             print(error)
+            delegate?.didFailWithError(error: error)
             return nil
         }
     }
