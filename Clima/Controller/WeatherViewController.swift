@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WeatherViewController: UIViewController, UITextFieldDelegate {
+class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManagerDelegate {
 
     @IBOutlet weak var conditionImageView: UIImageView!
     @IBOutlet weak var temperatureLabel: UILabel!
@@ -22,6 +22,9 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
         
         // searchTextField should set the WeatherViewController instance as its delegate
         searchTextField.delegate = self
+        
+        // WeatherManager sets the WeatherViewController instance as its delegate
+        wm.delegate = self
     }
 
     @IBAction func searchButtonPressed(_ sender: UIButton) {
@@ -65,6 +68,13 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
             textField.placeholder = "Please type a location"
             return false
         }
+    }
+    
+    func didUpdateWeather(weather: WeatherModel) {
+        print(weather.cityName)
+        print(weather.conditionID)
+        print(weather.conditionName)
+        print(weather.tempString)
     }
 }
 
