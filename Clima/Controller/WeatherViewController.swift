@@ -14,7 +14,8 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var searchTextField: UITextField!
-     
+    
+    var wm = WeatherManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +25,7 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func searchButtonPressed(_ sender: UIButton) {
-        print(searchTextField.text!)
+//        print(searchTextField.text!)
         
         // Make the keyboard go away
         searchTextField.endEditing(true)
@@ -32,7 +33,7 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     
     // This function triggers when user taps on the return button
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        print(searchTextField.text!)
+//        print(searchTextField.text!)
         
         // Make the keyboard go away
         searchTextField.endEditing(true)
@@ -44,7 +45,9 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         // this code triggers when any text field finishes editing
         
-        
+        if let city = searchTextField.text {
+            wm.fetchWeather(city: city)
+        }
         searchTextField.text = ""
     }
     
