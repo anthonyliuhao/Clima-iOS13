@@ -16,14 +16,19 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var searchTextField: UITextField!
     
+    
     var wm = WeatherManager()
     let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set the WeatherViewController instance as a delegate of the CLLocationManager instance
+        locationManager.delegate = self
+        
         // Ask for user permission to access location
         locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation() // Request one-time location
         
         // searchTextField should set the WeatherViewController instance as its delegate
         searchTextField.delegate = self
@@ -101,4 +106,33 @@ extension WeatherViewController: WeatherManagerDelegate {
     func didFailWithError(error: Error) {
         print(error)
     }
+}
+
+//MARK: - CLLocationManagerDelegate
+
+extension WeatherViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        
+        if let location = locations.last {
+            // As soon as a location is found, we tell the Location Manager to stop
+            locationManager.stopUpdatingLocation()
+            print("Got location!")
+            let lat = location.coordinate.latitude
+            let lon = location.coordinate.longitude
+            
+            wm.fetchWeather(latitude: lat, longitude: lon)
+        }
+    }
+    
+    @IBAction func locationButtonPressed(_ sender: UIButton) {
+        
+        locationManager.requestLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
+    }
+    
+    
 }
